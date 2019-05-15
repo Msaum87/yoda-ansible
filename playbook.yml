@@ -2,13 +2,27 @@
 # copyright Utrecht University
 # This playbook deploys a complete Yoda instance.
 
-- hosts: all
+- hosts: localhost
+  gather_facts: False
   pre_tasks:
     - name: Verify Ansible version meets requirements
       assert:
-        that: "ansible_version.full is version_compare('2.4', '>=')"
+        that: "ansible_version.full is version('2.7', '>=')"
         msg: >
-          "You must update Ansible to at least 2.4 to deploy Yoda."
+          "You must update Ansible to at least 2.7 to deploy Yoda."
+
+
+- hosts: all
+  pre_tasks:
+    - name: Verify Yoda Ansible repository is on correct branch
+      shell: git branch | grep \* | cut -d ' ' -f2
+      register: git_branch
+      changed_when: False
+      delegate_to: localhost
+
+    - fail:
+        msg: "Make sure your yoda-ansible repository is on branch {{ yoda_version}}. (git checkout {{ yoda_version }})"
+      when: not ansible_check_mode and yoda_version not in git_branch.stdout and yoda_environment != "development"
 
 
 - name: Add hosts entries to development instances
@@ -31,7 +45,7 @@
     - yoda-davrods
   tags:
     - portal
- 
+
 
 - name: Provision database server
   hosts: databases
@@ -86,7 +100,6 @@
     - resource
 
 
-
 - name: Provision public server
   hosts: publics
   become: yes
@@ -96,3 +109,12 @@
     - yoda-public
   tags:
     - public
+
+
+- name: Provision external user service server
+  hosts: eus
+  become: yes
+  roles:
+    - yoda-external-user-service
+  tags:
+    - eus

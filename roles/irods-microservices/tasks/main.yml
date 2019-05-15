@@ -1,15 +1,6 @@
 ---
 # copyright Utrecht University
 
-- name: Remove old json and xml microservice packages
-  package:
-    name: "{{ item }}"
-    state: absent
-  with_items:
-    - rit-irods-microservices
-    - irods-microservice-plugins-loadmeta
-
-
 - name: Check if iRODS microservices are installable from repository
   yum:
     list: "{{ item.value.package }}"
@@ -17,12 +8,23 @@
   register: irods_microservices_repo
 
 
+- name: Ensure iRODS 4.2.4 packages are absent
+  package:
+    name:
+      - irods-uu-microservices-4.2.4_0.7.10-1
+      - irods-uu-microservices-4.2.4_0.7.11-1
+      - irods-sudo-microservices-4.2.4_1.0.0-1
+      - davrods-4.2.4_1.4.1-1
+      - davrods-4.2.4_1.4.2-1
+    state: absent
+
+
 - name: Download iRODS microservice packages
   get_url:
     url: "{{ item.item.value.url }}"
     dest: "{{ rpm_dest_dir }}/{{ item.item.value.filename }}"
     checksum: "{{ item.item.value.checksum }}"
-  when: not item.results
+  when: not item.results and not repo_only
   with_items: "{{ irods_microservices_repo.results }}"
 
 
@@ -30,7 +32,7 @@
   yum:
     name: "{{ rpm_dest_dir }}/{{ item.item.value.filename }}"
     state: present
-  when: not item.results and not ansible_check_mode
+  when: not item.results and not ansible_check_mode and not repo_only
   with_items: "{{ irods_microservices_repo.results }}"
 
 
@@ -46,7 +48,7 @@
   package:
     name: "{{ item.value.package }}"
     state: present
-  when: not ansible_check_mode    
+  when: not ansible_check_mode
   with_dict: "{{ microservices }}"
 
 

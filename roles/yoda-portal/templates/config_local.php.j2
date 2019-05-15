@@ -16,7 +16,7 @@ $config['rodsDefaultResource'] = '{{ irods_default_resc }}';
 $config['encryption_key']      = '{{ yoda_php_encryption_key }}';
 
 // Config for versioning assets (browser caching).
-$config['assetsVersion'] = '{{ ansible_date_time.epoch }}';
+$config['assetsVersion'] = '{{ yoda_php_assets_version }}';
 
 {% if irods_authentication_scheme == 'PAM' %}
 $config['rodsAuthType']        = 'PAM'; // Either STANDARD or PAM.
@@ -30,3 +30,5 @@ $config['log_threshold']       = 4;
 {% else %}
 $config['log_threshold']       = 1;
 {% endif %}
+
+$config['yoda_eus_fqdn']       = '{{ yoda_eus_fqdn }}';

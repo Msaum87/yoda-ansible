@@ -1,6 +1,14 @@
 ---
 # copyright Utrecht University
 
+- name: Ensure Python dependencies are installed
+  package:
+    name: '{{ item }}'
+    state: present
+  with_items:
+  - python-enum34
+
+
 - name: Checkout rulesets from github
   become_user: "{{ irods_service_account }}"
   become: yes
@@ -14,10 +22,12 @@
   register: repochanges
 
 
-- name: Stop cron service before installing Yoda rulesets
-  service:
-    name: crond
-    state: stopped
+- name: Remove temporary rule files left behind
+  become_user: "{{ irods_service_account }}"
+  become: yes
+  command:
+    /bin/rm -f /etc/irods/*.re.*
+  ignore_errors: true
 
 
 - name: Run make install for each ruleset
@@ -39,22 +49,6 @@
     config_path: "/etc/irods/server_config.json"
     rulesets: "{{ rulesets | map(attribute='ruleset_name') | list  }}"
   when: not ansible_check_mode
-
-
-- name: Wait until iRODS server is ready to receive requests
-  become_user: '{{ irods_service_account }}'
-  become: yes
-  shell: 'ils /{{ irods_zone }}/home'
-  register: ils
-  until: ils is succeeded
-  retries: 5
-  delay: 10
-
-
-- name: Start cron service after installing Yoda rulesets
-  service:
-    name: crond
-    state: started
 
 
 - include_tasks: "{{ ruleset.name }}.yml"

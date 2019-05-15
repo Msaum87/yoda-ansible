@@ -7,6 +7,10 @@
     "smtp_username": "{{ smtp_username }}",
     "smtp_password": "{{ smtp_password }}",
 
+    "datacite_url": "https://{{ datacite_server }}",
+    "datacite_username": "{{ datacite_username }}",
+    "datacite_password": "{{ datacite_password }}",
+
 {% if epic_url != "PLACEHOLDER" %}
     "epic_url": "{{ epic_url }}",
     "epic_handle_prefix": "{{ epic_handle_prefix }}",
@@ -14,7 +18,7 @@
     "epic_certificate": "{{ credentials_store }}/epic_cert.pem",
 {% endif %}
 
-    "datacite_url": "https://{{ datacite_server }}",
-    "datacite_username": "{{ datacite_username }}",
-    "datacite_password": "{{ datacite_password }}"
+    "eus_api_fqdn": "{{ eus_api_fqdn }}",
+    "eus_api_port": "{{ eus_api_port }}",
+    "eus_api_secret": "{{ eus_api_secret }}"
 }

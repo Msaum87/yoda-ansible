@@ -1,63 +1,52 @@
 ---
 # copyright Utrecht University
 
-- name: Check if iRODS 4.1.11 is installed
-  stat:
-    path: /var/lib/irods/iRODS/irodsctl
-  register: irods_old
-
-
-- name: Check if iRODS 4.2 is installed
-  stat:
-    path: /var/lib/irods/irodsctl
-  register: irods_new
-
-
-- name: Check if iRODS delayed rule queue is empty
-  become_user: '{{ irods_service_account }}'
-  become: yes
-  shell: 'iqstat -a | wc -l'
-  register: wc
-  until: wc.stdout == "1"
-  retries: 5
-  delay: 60
-  check_mode: no
-  when: irods_old.stat.islnk is defined and irods_new.stat.islnk is not defined
-
-
-- name: Stop iRODS server before upgrade
-  become_user: '{{ irods_service_account }}'
-  become: yes
-  command: '/var/lib/irods/iRODS/irodsctl stop'
-  when: irods_old.stat.islnk is defined and irods_new.stat.islnk is not defined
-
-
-- name: Stop cron service before iRODS upgrade
-  service:
-    name: crond
-    state: stopped
-  when: irods_old.stat.islnk is defined and irods_new.stat.islnk is not defined
-
-
-- name: Ensure iRODS 4.2.3 packages are absent
+- name: Ensure iRODS 4.2.4 packages are absent
   package:
-    name: '{{ item }}'
+    name:
+      - irods-uu-microservices-4.2.4_0.7.10-1
+      - irods-uu-microservices-4.2.4_0.7.11-1
+      - irods-sudo-microservices-4.2.4_1.0.0-1
+      - davrods-4.2.4_1.4.1-1
+      - davrods-4.2.4_1.4.2-1
     state: absent
-  with_items:
-    - irods-uu-microservices-4.2.3_0.7.8-1
-    - irods-sudo-microservices-4.2.3_1.0.0-1
 
 
 - name: Ensure iRODS iCAT server, Python rule engine plugin and database plugin are present
   package:
-    name: '{{ item }}'
+    name:
+      - irods-server-4.2.5-1
+      - irods-runtime-4.2.5-1
+      - irods-database-plugin-postgres-4.2.5-1
+      - irods-rule-engine-plugin-python-4.2.5-1
     state: present
-  with_items:
-    - irods-server-4.2.4-1
-    - irods-runtime-4.2.4-1
-    - irods-database-plugin-postgres-4.2.4-1
-    - irods-rule-engine-plugin-python-4.2.4-1
   when: not ansible_check_mode
+
+
+# TEMPORARY: Download iRODS server 4.2.6 preview with hot fix.
+- name: Download iRODS server 4.2.6 preview release with hot fix
+  get_url:
+    url: 'https://people.renci.org/~alanking/utrecht-4.2.6-preview/irods-server-4.2.5-1.x86_64.rpm'
+    dest: '/tmp/irods-server-4.2.5-1.x86_64.rpm'
+    checksum: 'sha256:e7c5d8083942de07f82deba72b1df9612845a82799d5782f33fe44b44696e086'
+
+
+# TEMPORARY: Install iRODS server 4.2.6 preview with hot fix.
+- name: Install iRODS server 4.2.6 preview release with hot fix
+  command: rpm -i https://people.renci.org/~alanking/utrecht-4.2.6-preview/irods-server-4.2.5-1.x86_64.rpm --force
+
+
+# TEMPORARY: Download iRODS runtime 4.2.6 preview with hot fix.
+- name: Download iRODS runtime 4.2.6 preview release with hot fix
+  get_url:
+    url: 'https://people.renci.org/~alanking/utrecht-4.2.6-preview/irods-runtime-4.2.5-1.x86_64.rpm'
+    dest: '/tmp/irods-runtime-4.2.5-1.x86_64.rpm'
+    checksum: 'sha256:7fdf063695ce40d2efbdec0cfc94efa885c3abe75cdd4a45a3936b562e47be95'
+
+
+# TEMPORARY: Install iRODS runtime 4.2.6 preview with hot fix.
+- name: Install iRODS runtime 4.2.6 preview release with hot fix
+  command: rpm -i https://people.renci.org/~alanking/utrecht-4.2.6-preview/irods-runtime-4.2.5-1.x86_64.rpm --force
 
 
 - name: Ensure default msiExecCmd binaries are absent
@@ -85,6 +74,7 @@
     - listSharedCollectionsSharedWithUser
     - listUserACLForDataObjViaGroup
     - listUserACLForCollectionViaGroup
+  changed_when: False
 
 
 - name: Generate zone key
@@ -145,6 +135,13 @@
   when: irods_config.stat.exists == false and not ansible_check_mode
 
 
+- name: Ensure connection to database is possible
+  wait_for:
+    host: "{{ irods_database_fqdn }}"
+    port: "{{ irods_database_port }}"
+    timeout: 30
+
+
 - name: Configure iRODS iCAT server
   become: yes
   shell: python /var/lib/irods/scripts/setup_irods.py
@@ -185,10 +182,19 @@
     value: '{{ irods_icat_fqdn }}'
 
 
+- name: Ensure core.re is configured
+  become_user: '{{ irods_service_account }}'
+  become: yes
+  template:
+    src: core.re.j2
+    dest: /etc/irods/core.re
+    mode: 0644
+
+
 - name: Ensure iRODS server is up
   become_user: '{{ irods_service_account }}'
   become: yes
-  shell: 'ils /{{ irods_zone }}/home'
+  command: 'ils /{{ irods_zone }}/home'
   register: ils
   ignore_errors: true
   changed_when: ils is failed
@@ -204,19 +210,12 @@
 - name: Wait until iRODS server is ready to receive requests
   become_user: '{{ irods_service_account }}'
   become: yes
-  shell: 'ils /{{ irods_zone }}/home'
+  command: 'ils /{{ irods_zone }}/home'
   register: ils
   until: ils is succeeded
   retries: 5
   delay: 10
   when: ils is failed
-
-
-- name: Start cron service after iRODS upgrade
-  service:
-    name: crond
-    state: started
-  when: irods_old.stat.islnk is defined and irods_new.stat.islnk is not defined
 
 
 - name: Ensure Python plugin is configured
@@ -282,10 +281,10 @@
 
 
 - name: Ensure CA chain with signed certificate is present
-  command: 'ln -s {{ openssl_certs_dir }}/{{ openssl_crt_signed_and_chain }} {{ openssl_crt_signed_and_chain }}'
-  args:
-    chdir: '/etc/irods'
-    creates: '{{ openssl_crt_signed_and_chain }}'
+  file:
+    src: "{{ openssl_certs_dir }}/{{ openssl_crt_signed_and_chain }}"
+    dest: "/etc/irods/{{ openssl_crt_signed_and_chain }}"
+    state: link
 
 
 - name: Ensure Diffie-Hellman parameters are present
@@ -343,25 +342,29 @@
 
 
 - name: Retrieve iRODS server config file
-  command: cat /etc/irods/server_config.json
+  become_user: '{{ irods_service_account }}'
+  become: yes
+  slurp:
+    src: /etc/irods/server_config.json
   register: server_config
+  when: not ansible_check_mode
 
 
 - name: Retrieve iRODS server zone key
   set_fact:
-    zone_key: "{{ (server_config.stdout | from_json).zone_key }}"
+    zone_key: "{{ (server_config['content'] | b64decode | from_json).zone_key }}"
   when: not ansible_check_mode
 
 
 - name: Retrieve iRODS server negotiation key
   set_fact:
-    negotiation_key: "{{ (server_config.stdout | from_json).negotiation_key }}"
+    negotiation_key: "{{ (server_config['content'] | b64decode | from_json).negotiation_key }}"
   when: not ansible_check_mode
 
 
 - name: Retrieve iRODS server control plane key
   set_fact:
-    server_control_plane_key: "{{ (server_config.stdout | from_json).server_control_plane_key }}"
+    server_control_plane_key: "{{ (server_config['content'] | b64decode | from_json).server_control_plane_key }}"
   when: not ansible_check_mode
 
 
@@ -426,5 +429,5 @@
   when: read_access is failed
 
 
-- include_tasks: setup_pam_radius.yml
+- include_tasks: setup_pam.yml
   when: irods_authentication_scheme == "PAM"

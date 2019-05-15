@@ -1,9 +1,6 @@
 ---
 # copyright Utrecht University
 
-yoda_version: development
-irods_service_account: irods
-
 # Temporary directory to store downloaded rpm files.
 rpm_dest_dir: /tmp
 
@@ -18,6 +15,8 @@ zabbix_postgres:
 # and (GRANT CONNECT ON DATABASE "ICAT" TO zabbix)
 # Zabbix configuration
 zabbix_database_name: ICAT
+irods_database_name: ICAT
+eus_db_name: extuser
 zabbix_database_user: zabbix
 
-zabbix_server: 192.168.50.20
+repo_only: no  # Only download packages from repos.

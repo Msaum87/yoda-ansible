@@ -94,6 +94,7 @@ Variable                     | Description                                     |
 -----------------------------|-------------------------------------------------|
 ansible_user                 | Administrative user on instance for Ansible     |
 ansible_ssh_private_key_file | Path to private key file of administrative user |
+repo_only                    | Only download packages from repos               |
 
 Note: if one of these variables are different for a host then define them in the corresponding host specific variables file (host_vars).
 
@@ -152,11 +153,13 @@ datacite_password            | DataCite password                                
 datacite_prefix              | DataCite DOI prefix                                                     |
 datacite_server              | DataCite server URI                                                     |
 
-# EPIC PID Configuration
+### EPIC PID Configuration
 Variable                     | Description                                                             |
 -----------------------------|-------------------------------------------------------------------------|
 epic_url                     | EPIC PID server URI (undefined disables EPIC PID)                       |
 epic_handle_prefix           | EPIC PID prefix                                                         |
+epic_key                     | EPIC PID key (base64 encoded)                                           |
+epic_cert                    | EPIC PID cert (base64 encoded)                                          |
 
 ### PAM Radius configuration
 Variable                     | Description                                                             |
@@ -170,3 +173,19 @@ yoda_public_host             | Yoda public host                                 
 yoda_public_fqdn             | Yoda public fully qualified domain name (FQDN)                          |
 upload_priv_key              | Yoda public upload private key (base64 encoded)                         |
 upload_pub_key               | Yoda public upload public key (base64 encoded)                          |
+
+### External user service configuration
+Variable                     | Description                                                             |
+-----------------------------|-------------------------------------------------------------------------|
+yoda_eus_fqdn                | Yoda External User Service fully qualified domain name (FQDN)           |
+eus_api_fqdn                 | External User Service API fully qualified domain name (FQDN)            |
+eus_api_port                 | External User Service API port                                          |
+eus_api_secret               | External User Service API secret                                        |
+eus_db_password              | External User Service database password                                 |
+eus_smtp_host                | External User Service SMTP host                                         |
+eus_smtp_port                | External User Service SMTP port                                         |
+eus_smtp_user                | External User Service SMTP user                                         |
+eus_smtp_password            | External User Service SMTP password                                     |
+eus_smtp_from_address        | External User Service from address                                      |
+eus_smtp_replyto_address     | External User Service replyto address                                   |
+eus_mail_template            | External User Service mail template                                     |

@@ -8,6 +8,7 @@ irods_zone: tempZone                       # The name of the iRODS Zone
 # Test configuration.
 test_password: test
 
+# Following users are created by ansible as irods and linux users
 test_users:
   - name: researcher
     password: '{{ test_password }}'
@@ -39,12 +40,16 @@ test_users:
   - name: testuserdel
     password: '{{ test_password }}'
     type: rodsuser
-  # - name: yodaresearcher@gmail.com
-  #   password: '{{ test_password }}'
-  #   type: rodsuser
-  # - name: yodadatamanager@gmail.com
-  #   password: '{{ test_password }}'
-  #   type: rodsuser
+
+# Following users are created as irods users only
+eus_test_users:
+  - name: yodaresearcher@gmail.com
+  - name: yodadatamanager@gmail.com
+
+# Following users are created in the regressiontest and need to be removed only
+created_by_ta_users:
+  - name: createnewuser
+  - name: yodaexternaluser@gmail.com
 
 test_groups:
   - groupName: research-initial
@@ -54,11 +59,11 @@ test_groups:
   - groupName: research-initial1
     category: initial
     subcategory: initial
-    dataClassification: unspecified    
+    dataClassification: unspecified
   - groupName: datamanager-initial
     category: initial
     subcategory: initial
-    dataClassification:     
+    dataClassification:
   - groupName: grp-intake-initial
     category: intake-intake
     subcategory: intake-intake
@@ -70,88 +75,127 @@ test_groups:
   - groupName: grp-vault-initial
     category: intake-intake
     subcategory: intake-intake
-    dataClassification: unspecified    
+    dataClassification: unspecified
   - groupName: grp-intake-test
     category: intake-intake
     subcategory: intake-intake
-    dataClassification: unspecified    
+    dataClassification: unspecified
   - groupName: grp-datamanager-test
     category: intake-intake
     subcategory: intake-intake
-    dataClassification: unspecified    
+    dataClassification: unspecified
   - groupName: grp-vault-test
     category: intake-intake
     subcategory: intake-intake
-    dataClassification: unspecified    
+    dataClassification: unspecified
   - groupName: research-deletegroup
     category: initial
     subcategory: initial
-    dataClassification: unspecified    
+    dataClassification: unspecified
   - groupName: research-updateproperties
     category: initial
     subcategory: initial
-    dataClassification: unspecified    
+    dataClassification: unspecified
   - groupName: research-epicpid
     category: initial
     subcategory: initial
-    dataClassification: unspecified    
+    dataClassification: unspecified
   - groupName: research-mdtest
     category: initial
     subcategory: initial
-    dataClassification: unspecified    
+    dataClassification: unspecified
   - groupName: research-mdtestvault
     category: initial
     subcategory: initial
-    dataClassification: unspecified    
+    dataClassification: unspecified
   - groupName: research-notification
     category: initial
     subcategory: initial
-    dataClassification: unspecified    
+    dataClassification: unspecified
   - groupName: research-oaipmh
     category: initial
     subcategory: initial
-    dataClassification: unspecified    
+    dataClassification: unspecified
   - groupName: research-process1
     category: initial
     subcategory: initial
-    dataClassification: unspecified    
+    dataClassification: unspecified
   - groupName: research-process2
     category: initial
     subcategory: initial
-    dataClassification: unspecified    
+    dataClassification: unspecified
   - groupName: research-process3
     category: initial
     subcategory: initial
-    dataClassification: unspecified    
+    dataClassification: unspecified
   - groupName: research-processfordatacite
     category: initial
     subcategory: initial
-    dataClassification: unspecified    
+    dataClassification: unspecified
   - groupName: research-revisions
     category: initial
     subcategory: initial
-    dataClassification: unspecified    
+    dataClassification: unspecified
   - groupName: research-search
     category: initial
     subcategory: initial
-    dataClassification: unspecified    
+    dataClassification: unspecified
   - groupName: research-teststatistics1
     category: teststatistics
     subcategory: teststatistics
-    dataClassification: unspecified    
+    dataClassification: unspecified
   - groupName: research-teststatistics2
     category: teststatistics
     subcategory: teststatistics
-    dataClassification: unspecified    
+    dataClassification: unspecified
   - groupName: datamanager-teststatistics
     category: teststatistics
     subcategory: teststatistics
-    dataClassification:    
+    dataClassification:
   - groupName: research-nodmprocess
     category: nodminitial
     subcategory: nodminitial
     dataClassification: unspecified
-  
+    
+
+  - groupName: research-placeholderpythonbug1
+    category: placeholder
+    subcategory: placeholder
+    dataClassification: unspecified    
+  - groupName: research-placeholderpythonbug2
+    category: placeholder
+    subcategory: placeholder
+    dataClassification: unspecified    
+  - groupName: research-placeholderpythonbug3
+    category: placeholder
+    subcategory: placeholder
+    dataClassification: unspecified 
+  - groupName: research-placeholderpythonbug4
+    category: placeholder
+    subcategory: placeholder
+    dataClassification: unspecified    
+  - groupName: research-placeholderpythonbug5
+    category: placeholder
+    subcategory: placeholder
+    dataClassification: unspecified    
+  - groupName: research-placeholderpythonbug6
+    category: placeholder
+    subcategory: placeholder
+    dataClassification: unspecified 
+  - groupName: research-placeholderpythonbug7
+    category: placeholder
+    subcategory: placeholder
+    dataClassification: unspecified   
+  - groupName: research-placeholderpythonbug8
+    category: placeholder
+    subcategory: placeholder
+    dataClassification: unspecified   
+  - groupName: research-placeholderpythonbug9
+    category: placeholder
+    subcategory: placeholder
+    dataClassification: unspecified   
+
+
 test_groupusers:
   - groupName: priv-category-add
     user: functionaladminpriv
@@ -288,7 +332,7 @@ test_groupusers:
   - groupName: research-mdtest
     user: viewer
     role: reader
-    
+
   - groupName: research-mdtestvault
     user: functionaladminpriv
     role: manager
@@ -301,7 +345,7 @@ test_groupusers:
   - groupName: research-mdtestvault
     user: viewer
     role: reader
-  
+
   - groupName: research-notification
     user: functionaladminpriv
     role: manager
@@ -458,6 +502,15 @@ deletion_research_groups:
   - research: tovaultwithdm
   - research: recreateresearch
   - research: escapecharsinfolders
+  - research: placeholderpythonbug1
+  - research: placeholderpythonbug2
+  - research: placeholderpythonbug3
+  - research: placeholderpythonbug4
+  - research: placeholderpythonbug5
+  - research: placeholderpythonbug6
+  - research: placeholderpythonbug7
+  - research: placeholderpythonbug8
+  - research: placeholderpythonbug9
 deletion_datamanager_groups:
   - datamanager: frontendtest
   - datamanager: initial
@@ -465,18 +518,18 @@ deletion_datamanager_groups:
   - datamanager: nodminitial
   - datamanager: newtovault
   - datamanager: charescaping
-deletion_grp_groups: 
+deletion_grp_groups:
   - grp: datamanager-initial
   - grp: datamanager-test
   - grp: g1
   - grp: intake-initial
   - grp: intake-test
-  - grp: vault-initial  
+  - grp: vault-initial
   - grp: vault-test
-deletion_intake_groups:	
-  - intake: i1 
-  - intake: recreateintake 
-  
+deletion_intake_groups:
+  - intake: i1
+  - intake: recreateintake
+
 reset_tiers:
   - dev001
   - dev001_1
