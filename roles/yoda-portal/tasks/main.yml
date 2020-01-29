@@ -34,6 +34,7 @@
     dest: "{{ portal_source.dest }}"
     version: "{{ portal_source.version }}"
     update: "{{ update_portal }}"
+    force: yes
   register: portalchanges
 
 
