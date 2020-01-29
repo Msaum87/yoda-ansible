@@ -30,6 +30,7 @@
     dest: "/etc/irods/{{ item.name }}"
     version: "{{ item.version }}"
     update: "{{ update_rulesets }}"
+    force: yes
   with_items: "{{ rulesets }}"
   when: "'repo' in item"
   register: repochanges
