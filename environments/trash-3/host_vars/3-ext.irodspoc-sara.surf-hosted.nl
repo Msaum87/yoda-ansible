@@ -1,2 +1,2 @@
 ---
-ansible_host: 1-ext.irodspoc-sara.surf-hosted.nl
+ansible_host: 3-ext.irodspoc-sara.surf-hosted.nl
