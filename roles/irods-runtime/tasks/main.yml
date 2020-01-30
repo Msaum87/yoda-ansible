@@ -13,5 +13,5 @@
 
 - name: Ensure iRODS runtime is installed
   package:
-    name: irods-runtime-4.2.6-1
+    name: irods-runtime-4.2.6-1.x86_64 
     state: present
