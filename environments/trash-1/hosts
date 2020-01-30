@@ -1,0 +1,73 @@
+###############
+# Full instance
+###############
+# Define all hosts in instance here:
+[full:children]
+full-portal
+full-davrods
+full-database
+full-icat
+full-resource
+full-public
+full-eus
+
+# Define portal host here:
+[full-portal]
+1-yoda.irodspoc-sara.surf-hosted.nl
+
+# Define DAVRODS host here:
+[full-davrods]
+1-data.irodspoc-sara.surf-hosted.nl
+# Define database host here:
+[full-database]
+1-yoda.irodspoc-sara.surf-hosted.nl
+
+# Define icat host here:
+[full-icat]
+1-yoda.irodspoc-sara.surf-hosted.nl
+
+# Define resource host here:
+[full-resource]
+#Empty on our current setup
+
+# Define public host here:
+[full-public]
+1-public.irodspoc-sara.surf-hosted.nl
+
+# Define external user service host here:
+[full-eus]
+1-ext.irodspoc-sara.surf-hosted.nl
+
+###############
+# All instances
+###############
+# Define all portal hosts here:
+[portals:children]
+full-portal
+
+# Define all database hosts here:
+[databases:children]
+full-database
+
+# Define all icat hosts here:
+[icats:children]
+full-icat
+
+# Define all resource hosts here:
+[resources:children]
+full-resource
+
+# Define all public hosts here:
+[publics:children]
+full-public
+
+# Define external user service host here:
+[eus:children]
+full-eus
+
+# Provision instances with test data:
+[test:children]
+full-icat
+
+[development:children]
+full
