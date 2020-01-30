@@ -59,9 +59,9 @@ root_crt: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC+rkpulr6ytDb4ORLj1xXcSJ3LDQccAy
 instance: full                                     # Name of Yoda instance, as defined in hosts file
 yoda_version: release-1.5                          # Git branch, for example: development or release-1.4
 yoda_environment: production                       # Yoda environment: development, testing, acceptance or production
-yoda_portal_fqdn:  1-yoda.irodspoc-sara.surf-hosted.nl                # Yoda Portal fully qualified domain name (FQDN)
-yoda_davrods_fqdn: 1-data.irodspoc-sara.surf-hosted.nl                  # Yoda Davrods WebDAV fully qualified domain name (FQDN)
-yoda_davrods_anonymous_fqdn: 1-data.irodspoc-sara.surf-hosted.nl # Yoda Davrods anonymous WebDAV fully qualified domain name (FQDN)
+yoda_portal_fqdn:  3-yoda.irodspoc-sara.surf-hosted.nl                # Yoda Portal fully qualified domain name (FQDN)
+yoda_davrods_fqdn: 3-data.irodspoc-sara.surf-hosted.nl                  # Yoda Davrods WebDAV fully qualified domain name (FQDN)
+yoda_davrods_anonymous_fqdn: 3-data.irodspoc-sara.surf-hosted.nl # Yoda Davrods anonymous WebDAV fully qualified domain name (FQDN)
 yoda_davrods_anonymous_port: 8443                  
 
 
@@ -94,9 +94,9 @@ irods_password: rods                       # iRODS admin password
 irods_database_user: irodsdb               # The iRODS database username
 irods_database_password: irodsdev          # The password for the iRODS database username
 irods_zone: tempZone                       # The name of the iRODS Zone
-irods_icat_fqdn: 1-yoda.irodspoc-sara.surf-hosted.nl             # iRODS iCAT fully qualified domain name (FQDN)
-irods_database_fqdn: 1-yoda.irodspoc-sara.surf-hosted.nl    # iRODS database fully qualified domain name (FQDN)
-irods_resource_fqdn: 1-yoda.irodspoc-sara.surf-hosted.nl    # iRODS resource fully qualified domain name (FQDN)
+irods_icat_fqdn: 3-yoda.irodspoc-sara.surf-hosted.nl             # iRODS iCAT fully qualified domain name (FQDN)
+irods_database_fqdn: 3-yoda.irodspoc-sara.surf-hosted.nl    # iRODS database fully qualified domain name (FQDN)
+irods_resource_fqdn: 3-yoda.irodspoc-sara.surf-hosted.nl    # iRODS resource fully qualified domain name (FQDN)
 irods_default_resc: irodsResc              # iRODS default resource name
 irods_ssl_verify_server: none              # Verify TLS certificate, use 'cert' for acceptance and production
 irods_resources:
@@ -191,8 +191,8 @@ credential_files: PLACEHOLDER  # Location of Yoda credentials files
 # Mail notifications
 #####################
 send_notifications: 0               # Enable notifications: yes (1) or no (0)
-notifications_sender_email: noreply@1-public.irodspoc-sara.surf-hosted.nl # Notifiations sender email address
-notifications_reply_to: noreply@1-public.irodspoc-sara.surf-hosted.nl     # Notifiations Reply-To email address
+notifications_sender_email: noreply@3-public.irodspoc-sara.surf-hosted.nl # Notifiations sender email address
+notifications_reply_to: noreply@3-public.irodspoc-sara.surf-hosted.nl     # Notifiations Reply-To email address
 smtp_server: mta.surfsara.nl            # SMTP server to send mail to
 smtp_username: yodaMailer          # SMTP server username
 smtp_password: seeSaumWithQuestions          # SMTP server password
@@ -227,8 +227,8 @@ zabbix_server: PLACEHOLDER
 ############################
 # Public host configuration
 ############################
-yoda_public_host: 1-public.irodspoc-sara.surf-hosted.nl     # Yoda public host
-yoda_public_fqdn: 1-public.irodspoc-sara.surf-hosted.nl     # Yoda public fully qualified domain name (FQDN)
+yoda_public_host: 3-public.irodspoc-sara.surf-hosted.nl     # Yoda public host
+yoda_public_fqdn: 3-public.irodspoc-sara.surf-hosted.nl     # Yoda public fully qualified domain name (FQDN)
 
 # Yoda public upload private key (base64 encoded)
 # ssh-keygen -t ed25519 -> base64
@@ -250,8 +250,8 @@ upload_pub_key: |
 ######################################
 # External user service configuration
 ######################################
-yoda_eus_fqdn: 1-ext.irodspoc-sara.surf-hosted.nl
-eus_api_fqdn: 1-ext.irodspoc-sara.surf-hosted.nl
+yoda_eus_fqdn: 3-ext.irodspoc-sara.surf-hosted.nl
+eus_api_fqdn: 3-ext.irodspoc-sara.surf-hosted.nl
 eus_api_secret: saltyPretzels
 eus_db_password: testPasswordGoeshere
 eus_smtp_host: 127.0.0.1
@@ -260,6 +260,6 @@ eus_smtp_auth: false
 eus_smtp_security: "''"
 eus_smtp_user: ""
 eus_smtp_password: ""
-eus_smtp_from_address: noreply@1-ext.irodspoc-sara.surf-hosted.nl 
-eus_smtp_replyto_address: noreply@1-ext.irodspoc-sara.surf-hosted.nl
+eus_smtp_from_address: noreply@3-ext.irodspoc-sara.surf-hosted.nl 
+eus_smtp_replyto_address: noreply@3-ext.irodspoc-sara.surf-hosted.nl
 eus_mail_template: surf
