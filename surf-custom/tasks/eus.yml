@@ -32,7 +32,7 @@
   lineinfile:
     path: /etc/postfix/main.cf
     regexp: "^#myhostname = virtual.domain.tld"
-    line: "myhostname = {{ HOSTNAMEFQDN }}"
+    line: "myhostname = {{ ansible_host }}"
     state: present
     backrefs: true
   notify: Restart postfix

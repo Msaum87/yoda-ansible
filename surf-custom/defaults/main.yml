@@ -2,6 +2,8 @@
 yoda_deployment_user: yodadeployment
 irods_service_account: irods
 
+EUSFQDN: vu-ext.irodspoc-sara.surf-hosted.nl
+PORTALFQDN: vu-yoda.irodspoc-sara.surf-hosted.nl
 
 #davrods defaults stolen to make template work better
 
