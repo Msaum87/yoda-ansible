@@ -95,24 +95,15 @@
     mode: '0644'
 
 
-- name: SURFsara -- EUS -- Root Key from ICAT
-  lineinfile: 
-    path: /root/.ssh/authorized_keys
-    create: true
-    line: "{{ root_crt }}"
-    mode: 0644
-    owner: root
-    group: root
-
-- name: SURFsara -- EUS -- Creates a cron file under /etc/cron.d
-  cron:
-    name: eus dump
-    minute: "5"
-    hour: "*/6"
-    day: "*"
-    month: "*"
-    weekday: "*"
-    user: root
-    job: "sudo -i -u postgres 'pg_dumpall' > /root/eus.bak"
-    cron_file: cron_eus_dump
+#- name: SURFsara -- EUS -- Creates a cron file under /etc/cron.d
+#  cron:
+#    name: eus dump
+#    minute: "5"
+#    hour: "*/6"
+#    day: "*"
+#    month: "*"
+#    weekday: "*"
+#    user: root
+#    job: "sudo -i -u postgres 'pg_dumpall' > /root/eus.bak"
+#    cron_file: cron_eus_dump
 

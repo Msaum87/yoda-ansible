@@ -8,12 +8,12 @@
     group: "root"
     mode: '0644'
 
-- name: SURFsara -- DAVRODS -- update davrods-vhost
-  template:
-    src: davrods/davrods-vhost.conf.j2
-    dest: /etc/httpd/conf.d/davrods-vhost.conf
-    owner: root
-    group: root
-    mode: 0644
-  notify: Restart Apache webserver
+#- name: SURFsara -- DAVRODS -- update davrods-vhost
+#  template:
+#    src: davrods/davrods-vhost.conf.j2
+#    dest: /etc/httpd/conf.d/davrods-vhost.conf
+#    owner: root
+#    group: root
+#    mode: 0644
+#  notify: Restart Apache webserver
 
