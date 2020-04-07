@@ -45,7 +45,6 @@
     - yoda-portal
     - irods-icommands
     - irods-runtime
-    - yoda-davrods
   tags:
     - portal
 
@@ -85,6 +84,7 @@
     - irods-resource
     - irods-runtime
     - irods-microservices
+    - yoda-davrods
   tags:
     - resource
 
