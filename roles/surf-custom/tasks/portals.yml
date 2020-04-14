@@ -49,13 +49,13 @@
     group: "{{ yoda_deployment_user }}"
     mode: '0644'
 
-#- name: Ensure external user check is present
-#  copy:
-#    src: portals/is-user-external.sh
-#    dest: /usr/local/bin/is-user-external.sh
-#    owner: root
-#    group: irods
-#    mode: 0750
+- name: Ensure external user check is present
+  copy:
+    src: portals/is-user-external.sh
+    dest: /usr/local/bin/is-user-external.sh
+    owner: root
+    group: irods
+    mode: 0750
 
 - name: SURFsara -- PORTALS -- Adjusting uu.nl to be external users
   lineinfile:
@@ -139,7 +139,7 @@
 - name: SURFsara -- PORTALS -- Auto-include default license files
   become_user: "{{ irods_service_account }}"
   become: yes
-  command: iput -r /etc/irods/irods-ruleset-research/tools/licenses /tempZone/yoda
+  command: "iput -r /etc/irods/irods-ruleset-research/tools/licenses /{{ irods_zone }}/yoda"
   ignore_errors: true
 
 #- name: SURFsara -- PORTALS -- Create log rotation directory
