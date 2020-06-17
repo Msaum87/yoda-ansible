@@ -8,3 +8,11 @@ development_credentials.yml
 
 # Vagrant stuff
 /.vagrant
+
+# Filtereing environments out
+environments/*
+!environments/default/
+
+# Ignoring logfile
+lopg
+
