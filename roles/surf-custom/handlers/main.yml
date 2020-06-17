@@ -1,0 +1,12 @@
+---
+
+- name: Restart postfix
+  service:
+    name: postfix
+    state: restarted
+
+- name: Restart Apache webserver
+  service:
+    name: httpd
+    state: restarted
+

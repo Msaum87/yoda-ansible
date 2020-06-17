@@ -1,0 +1,180 @@
+---
+- name: SURFsara -- PORTALS -- Copying favicon
+  copy:
+    src: "../../{{ FAVICONPATH }}"
+    dest: /var/www/yoda/yoda-portal/public/static/img/favicon.ico
+    owner: "{{ yoda_deployment_user }}"
+    group: "{{ yoda_deployment_user }}"
+    mode: '0644'
+
+- name: SURFsara -- PORTALS -- Copying Header Img
+  copy:
+    src: "../../{{ HEADERIMG }}"
+    dest: /var/www/yoda/yoda-portal/public/static/img/headerimg
+    owner: "{{ yoda_deployment_user }}"
+    group: "{{ yoda_deployment_user }}"
+    mode: '0644'
+
+- name: SURFsara -- PORTALS -- Copying Splash Img
+  copy:
+    src: "../../{{ SPLASHIMG }}"
+    dest: /var/www/yoda/yoda-portal/public/static/img/splash
+    owner: "{{ yoda_deployment_user }}"
+    group: "{{ yoda_deployment_user }}"
+    mode: '0644'
+  when: SPLASHIMG is defined
+    
+- name: SURFsara -- PORTALS -- Copy Yoda Portal splash page
+  template:
+    src: "portals/static_frontpage.html.j2"
+    dest: "/var/www/yoda/yoda-portal/public/static/static_frontpage.html"
+    owner: "{{ yoda_deployment_user }}"
+    group: "{{ yoda_deployment_user }}"
+    mode: '0644'
+  when: SPLASHIMG is defined
+
+- name: SURFsara -- PORTALS -- Copy Yoda Portal header php
+  template:
+    src: "portals/start.php.j2"
+    dest: "/var/www/yoda/yoda-portal/views/common/start.php"
+    owner: "{{ yoda_deployment_user }}"
+    group: "{{ yoda_deployment_user }}"
+    mode: '0644'
+
+- name: SURFsara -- PORTALS -- Copy Yoda Portal login php
+  template:
+    src: "portals/login.php.j2"
+    dest: "/var/www/yoda/yoda-portal/views/user/login.php"
+    owner: "{{ yoda_deployment_user }}"
+    group: "{{ yoda_deployment_user }}"
+    mode: '0644'
+
+- name: Ensure external user check is present
+  copy:
+    src: portals/is-user-external.sh
+    dest: /usr/local/bin/is-user-external.sh
+    owner: root
+    group: irods
+    mode: 0750
+
+- name: SURFsara -- PORTALS -- Adjusting uu.nl to be external users
+  lineinfile:
+    path: "{{ item }}"
+    regexp: '^		if \(\*domain \!\= \"uu\.nl\" \&\& \*domain not like \"\*\.uu\.nl\"\) \{'
+    line: '		if (*domain != "") {'
+    state: present
+    backrefs: true
+  loop:
+    - /etc/irods/rules-uu.re
+    - /etc/irods/irods-ruleset-uu/rules-uu.re
+    - /etc/irods/irods-ruleset-uu/uuGroup.r
+
+- name: SURFsara -- PORTALS -- Adjusting storage statistics gathering cronjob
+  become_user: "{{ irods_service_account }}"
+  become: yes
+  cron:
+    name: 'monthly-storage-statistics'
+    minute: 0
+    hour: 0
+    job: '/bin/irule -F /etc/irods/irods-ruleset-uu/tools/monthly-storage-statistics.r >> $HOME/log/job_monthly-storage-statistics.log 2>&1'
+
+- name: SURFsara -- PORTALS -- Auto-include default license files
+  become_user: "{{ irods_service_account }}"
+  become: yes
+  command: "iput -r /etc/irods/irods-ruleset-research/tools/licenses /{{ irods_zone }}/yoda"
+  ignore_errors: true
+
+#- name: Disabling asynchronous replication if set
+#  become: yes
+#  lineinfile:
+#    path: "/etc/irods/rules-uu.re"
+#    regexp: '^ *uuReplicateAsynchronously'
+#    line: ' #disabled by SURFsara setup uuReplicateAsynchronously'
+#    state: present
+#    backrefs: true
+
+#- name: SURFsara -- PORTALS -- Creates a cron file under /etc/cron.d
+#  cron:
+#    name: icat dump
+#    minute: "5"
+#    hour: "*/6"
+#    day: "*"
+#    month: "*"
+#    weekday: "*"
+#    user: root
+#    job: "sudo -i -u postgres 'pg_dumpall' > /root/icat.bak"
+#    cron_file: cron_icat_dump 
+#
+#
+#- name: SURFsara -- PORTALS -- Creates a cron file under /etc/cron.d
+#  cron:
+#    name: icat backup
+#    minute: "15"
+#    hour: "*/6"
+#    day: "*"
+#    month: "*"
+#    weekday: "*"
+#    user: root
+#    job: "cp /root/icat.bak /data/.pgsql/icat.bak_`date +\\%Y\\%m\\%d_\\%H\\%M`"
+#    cron_file: cron_icat_backup
+#
+#- name: SURFsara -- PORTALS -- Creates a cron file under /etc/cron.d
+#  cron:
+#    name: eus backup
+#    minute: "15"
+#    hour: "*/6"
+#    day: "*"
+#    month: "*"
+#    weekday: "*"
+#    user: root
+#    job: "scp -oStrictHostKeyChecking=no {{ EUSFQDN }}:/root/eus.bak /data/.pgsql/eus.bak_`date +\\%Y\\%m\\%d_\\%H\\%M`"
+#    cron_file: cron_eus_backup
+#
+#- name: SURFsara -- PORTALS -- Creates a cron file under /etc/cron.d
+#  cron:
+#    name: rotate backup
+#    minute: "0"
+#    hour: "0"
+#    day: "*"
+#    month: "*"
+#    weekday: "*"
+#    user: root
+#    job: "/usr/bin/find /data/.pgsql/ -type f -mtime +30 -delete"
+#    cron_file: cron_rotate_backup
+#
+#- name: SURFsara -- PORTALS -- Creates pgsql backup directory
+#  file:
+#    path: /data/.pgsql
+#    owner: root
+#    group: root
+#    mode: '0700'
+#    state: directory
+
+#- name: SURFsara -- PORTALS -- Create log rotation directory
+#  file:
+#    path: /data/.log
+#    owner: irods
+#    group: irods
+#    mode: 0755
+#    state: directory
+#
+#- name: SURFsara -- PORTALS -- Create log_archive symlink
+#  file:
+#    path: /var/lib/irods/log/log_archive
+#    src: /data/.log
+#    owner: irods
+#    group: irods
+#    state: link
+#
+#- name: SURFsara -- PORTALS -- Create irods logrotate cronjob
+#  cron:
+#    name: irodsLogRotate
+#    minute: "0"
+#    hour: "0"
+#    day: "*"
+#    month: "*"
+#    weekday: "*"
+#    user: irods
+#    job: "/usr/bin/find /var/lib/irods/log/ -mtime +7 -type f -printf 'tar -czf /data/.log/\\%P.tar.gz \\%p --remove-files \\n' | sh "
+#    cron_file: cron_irods_logrotate
+
