@@ -54,7 +54,7 @@
     content: ""
     dest: "{{ item }}"
     mode: 0644
-    force: no
+    force: yes
   with_items:
     - /etc/irods/rules_dr.py
 
