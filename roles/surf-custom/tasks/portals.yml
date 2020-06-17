@@ -69,6 +69,30 @@
     - /etc/irods/irods-ruleset-uu/rules-uu.re
     - /etc/irods/irods-ruleset-uu/uuGroup.r
 
+- name: SURFsara -- PORTALS -- Adjusting storage statistics gathering cronjob
+  become_user: "{{ irods_service_account }}"
+  become: yes
+  cron:
+    name: 'monthly-storage-statistics'
+    minute: 0
+    hour: 0
+    job: '/bin/irule -F /etc/irods/irods-ruleset-uu/tools/monthly-storage-statistics.r >> $HOME/log/job_monthly-storage-statistics.log 2>&1'
+
+- name: SURFsara -- PORTALS -- Auto-include default license files
+  become_user: "{{ irods_service_account }}"
+  become: yes
+  command: "iput -r /etc/irods/irods-ruleset-research/tools/licenses /{{ irods_zone }}/yoda"
+  ignore_errors: true
+
+#- name: Disabling asynchronous replication if set
+#  become: yes
+#  lineinfile:
+#    path: "/etc/irods/rules-uu.re"
+#    regexp: '^ *uuReplicateAsynchronously'
+#    line: ' #disabled by SURFsara setup uuReplicateAsynchronously'
+#    state: present
+#    backrefs: true
+
 #- name: SURFsara -- PORTALS -- Creates a cron file under /etc/cron.d
 #  cron:
 #    name: icat dump
@@ -125,22 +149,6 @@
 #    group: root
 #    mode: '0700'
 #    state: directory
-
-
-- name: SURFsara -- PORTALS -- Adjusting storage statistics gathering cronjob
-  become_user: "{{ irods_service_account }}"
-  become: yes
-  cron:
-    name: 'monthly-storage-statistics'
-    minute: 0
-    hour: 0
-    job: '/bin/irule -F /etc/irods/irods-ruleset-uu/tools/monthly-storage-statistics.r >> $HOME/log/job_monthly-storage-statistics.log 2>&1'
-
-- name: SURFsara -- PORTALS -- Auto-include default license files
-  become_user: "{{ irods_service_account }}"
-  become: yes
-  command: "iput -r /etc/irods/irods-ruleset-research/tools/licenses /{{ irods_zone }}/yoda"
-  ignore_errors: true
 
 #- name: SURFsara -- PORTALS -- Create log rotation directory
 #  file:
