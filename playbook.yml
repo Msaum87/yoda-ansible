@@ -57,10 +57,16 @@
     - yoda-portal
     - irods-icommands
     - irods-runtime
-    - yoda-davrods
   tags:
     - portal
 
+- name: Provision davrods server
+  hosts: davrods
+  become: yes
+  roles:
+    - yoda-davrods
+  tags:
+    - davrods
 
 - name: Provision database server
   hosts: databases
