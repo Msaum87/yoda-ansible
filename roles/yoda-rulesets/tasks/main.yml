@@ -8,13 +8,13 @@
     state: present
 
 
-- name: Ensure old Python dependencies are absent
-  package:
-    name:
-      - python-jinja2
-      - python-xmltodict
-      - python-lxml
-    state: absent
+#- name: Ensure old Python dependencies are absent
+#  package:
+#    name:
+#      - python-jinja2
+#      - python-xmltodict
+#      - python-lxml
+#    state: absent
 
 
 - name: Checkout rulesets from github
