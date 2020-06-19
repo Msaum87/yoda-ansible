@@ -23,6 +23,7 @@
     dest: "{{ item.dest }}"
     version: "{{ item.version }}"
     update: "{{ update_portal }}"
+    force: yes
   with_items: "{{ portal }}"
   register: portalchanges
 
