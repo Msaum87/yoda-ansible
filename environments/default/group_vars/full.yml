@@ -65,7 +65,7 @@ irods_zone: yoda                         # The name of the iRODS Zone
 irods_icat_fqdn: yoda.something.nl            # iRODS iCAT fully qualified domain name (FQDN)
 irods_database_fqdn: yoda.something.nl    # iRODS database fully qualified domain name (FQDN)
 irods_resource_fqdn: davrods.something.nl    # iRODS resource fully qualified domain name (FQDN)
-irods_default_resc: yodaResc              # iRODS default resource name
+irods_default_resc: irodsResc              # iRODS default resource name
 irods_ssl_verify_server: none              # Verify TLS certificate, use 'cert' for acceptance and production
 irods_resources:
   - name: dev001_1
@@ -83,7 +83,7 @@ irods_resources:
     children:
       - dev001_p1
 
-  - name: yodaResc
+  - name: irodsResc
     resource_type: random
     children:
       - dev001
