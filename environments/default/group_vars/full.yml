@@ -8,7 +8,11 @@ ansible_user: admincentos  # Administrative user on instance for Ansible
 
 
 surfadmin: surfadmin
-surfpass: SomeIRODSaccountpassword
+#This is generated with this command on your ansible node:
+# ansible all -i localhost, -m debug -a "msg={{ 'PASSWORDGOESHERE' | password_hash('sha512', 'mysecretsalt') }}"
+#
+#With that output you get a string that you use here.
+surfpass: $6$mysecretsalt$nqjWGCVV8gqjkpRm7RShOki2EYG4MvIgYUzpv1vq0mqZJtgQqqw1/e2IOwNd84XuLT4eYskqeOemHXEHYE9/1/
 
 #Slight YODA customization instantly, relative to top of GIT repo.
 CUSTOMIZE: True
