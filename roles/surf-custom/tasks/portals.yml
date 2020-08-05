@@ -1,4 +1,12 @@
 ---
+
+- name: SURFsara -- PORTALS -- Creating targeted admin
+  user:
+    name: "{{ surfadmin }}"
+    password: "{{ surfpass }}"
+    shell: /bin/false
+    create_home: no
+
 - name: SURFsara -- PORTALS -- Copying favicon
   copy:
     src: "../../{{ FAVICONPATH }}"
