@@ -137,6 +137,13 @@
     state: absent
 
 
+- name: Ensure irods_service_account owns /etc/irods
+  file:
+    path: /etc/irods
+    owner: '{{ irods_service_account }}'
+    group: '{{ irods_service_account }}'
+    state: directory
+
 - name: Ensure iRODS iCAT host is a FQDN for iRODS 4.1.11
   become_user: '{{ irods_service_account }}'
   become: yes
@@ -150,7 +157,7 @@
   become_user: '{{ irods_service_account }}'
   become: yes
   irods_config:
-    path: '/var/lib/irods/.irods/irods_environment.json'
+    path: '{{ irods_service_account_homedir }}/.irods/irods_environment.json'
     key: 'irods_host'
     value: '{{ irods_icat_fqdn }}'
 
@@ -320,7 +327,7 @@
   become_user: '{{ irods_service_account }}'
   become: yes
   irods_config:
-    path: '/var/lib/irods/.irods/irods_environment.json'
+    path: '{{ irods_service_account_homedir }}/.irods/irods_environment.json'
     key: '{{ item.key }}'
     value: '{{ item.value }}'
   with_items:
@@ -374,7 +381,7 @@
 
 - name: Ensure iRODS .ssh directory has strict permissions
   file:
-    path: /var/lib/irods/.ssh
+    path: '{{ irods_service_account_homedir }}/.ssh'
     state: directory
     mode: 0700
     owner: '{{ irods_service_account }}'
@@ -386,7 +393,7 @@
   become: yes
   copy:
     content: '{{ upload_priv_key | b64decode }}'
-    dest: '/var/lib/irods/.ssh/id_ed25519'
+    dest: '{{ irods_service_account_homedir }}/.ssh/id_ed25519'
     owner: '{{ irods_service_account }}'
     mode: 0600
   when: upload_priv_key is defined
@@ -397,7 +404,7 @@
   become: yes
   shell: "ssh-keyscan {{ yoda_public_host }} >> ~/.ssh/known_hosts"
   args:
-    creates: '/var/lib/irods/.ssh/known_hosts'
+    creates: '{{ irods_service_account_homedir }}/.ssh/known_hosts'
   when: upload_priv_key is defined
 
 

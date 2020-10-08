@@ -2,7 +2,7 @@
 # copyright Utrecht University
 
 - name: Ensure all resources exist
-  become_user: irods
+  become_user: ' {{ irods_service_account }}'
   become: yes
   irods_resource:
     name: "{{ item.name }}"
@@ -17,7 +17,7 @@
   become_user: '{{ irods_service_account }}'
   become: yes
   irods_config:
-    path: '/var/lib/irods/.irods/irods_environment.json'
+    path: '{{ irods_service_account_homedir }}/.irods/irods_environment.json'
     key: 'irods_default_resource'
     value: '{{ irods_default_resc }}'
 

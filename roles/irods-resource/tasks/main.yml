@@ -228,7 +228,7 @@
   become_user: '{{ irods_service_account }}'
   become: yes
   irods_config:
-    path: '/var/lib/irods/.irods/irods_environment.json'
+    path: '{{ irods_service_account_homedir }}/.irods/irods_environment.json'
     key: '{{ item.key }}'
     value: '{{ item.value }}'
   with_items:

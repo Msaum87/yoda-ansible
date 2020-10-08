@@ -12,7 +12,7 @@
     src: is-user-external.sh.j2
     dest: /usr/local/bin/is-user-external.sh
     owner: root
-    group: irods
+    group: '{{ irods_service_account }}'
     mode: 0750
   when: external_users
 
@@ -22,7 +22,7 @@
     src: external-auth.py.j2
     dest: /usr/local/bin/external-auth.py
     owner: root
-    group: irods
+    group: '{{ irods_service_account }}'
     mode: 0750
   when: external_users
 
