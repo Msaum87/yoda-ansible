@@ -128,6 +128,13 @@
     - /etc/irods/rules_research.py
     - /etc/irods/rules_dr.py
 
+- name: Ensure irods_service_account owns /etc/irods
+  file:
+    path: /etc/irods
+    owner: '{{ irods_service_account }}'
+    group: '{{ irods_service_account }}'
+    state: directory
+
 
 - name: Ensure iRODS server is up
   become_user: '{{ irods_service_account }}'
