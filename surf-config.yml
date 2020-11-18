@@ -1,8 +1,0 @@
----
-- name: SURFsara Customizable options
-  hosts: all
-  become: true
-  roles:
-      - role: surf-custom
-        when: CUSTOMIZE is defined and CUSTOMIZE == true
-
